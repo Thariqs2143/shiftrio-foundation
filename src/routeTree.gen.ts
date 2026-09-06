@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as StaffRouteImport } from './routes/staff'
 import { Route as StaffIndexRouteImport } from './routes/staff.index'
+import { Route as StaffTimesheetRouteImport } from './routes/staff.timesheet'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -28,28 +29,36 @@ const StaffIndexRoute = StaffIndexRouteImport.update({
   path: '/',
   getParentRoute: () => StaffRoute,
 } as any)
+const StaffTimesheetRoute = StaffTimesheetRouteImport.update({
+  id: '/timesheet',
+  path: '/timesheet',
+  getParentRoute: () => StaffRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/staff': typeof StaffRouteWithChildren
+  '/staff/timesheet': typeof StaffTimesheetRoute
   '/staff/': typeof StaffIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/staff/timesheet': typeof StaffTimesheetRoute
   '/staff': typeof StaffIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/staff': typeof StaffRouteWithChildren
+  '/staff/timesheet': typeof StaffTimesheetRoute
   '/staff/': typeof StaffIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/staff' | '/staff/'
+  fullPaths: '/' | '/staff' | '/staff/timesheet' | '/staff/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/staff'
-  id: '__root__' | '/' | '/staff' | '/staff/'
+  to: '/' | '/staff/timesheet' | '/staff'
+  id: '__root__' | '/' | '/staff' | '/staff/timesheet' | '/staff/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -80,14 +89,23 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StaffIndexRouteImport
       parentRoute: typeof StaffRoute
     }
+    '/staff/timesheet': {
+      id: '/staff/timesheet'
+      path: '/timesheet'
+      fullPath: '/staff/timesheet'
+      preLoaderRoute: typeof StaffTimesheetRouteImport
+      parentRoute: typeof StaffRoute
+    }
   }
 }
 
 interface StaffRouteChildren {
+  StaffTimesheetRoute: typeof StaffTimesheetRoute
   StaffIndexRoute: typeof StaffIndexRoute
 }
 
 const StaffRouteChildren: StaffRouteChildren = {
+  StaffTimesheetRoute: StaffTimesheetRoute,
   StaffIndexRoute: StaffIndexRoute,
 }
 
