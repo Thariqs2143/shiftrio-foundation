@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as StaffRouteImport } from './routes/staff'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as StaffIndexRouteImport } from './routes/staff.index'
 import { Route as StaffProfileRouteImport } from './routes/staff.profile'
 import { Route as StaffTimesheetRouteImport } from './routes/staff.timesheet'
@@ -31,6 +32,11 @@ const StaffRoute = StaffRouteImport.update({
   path: '/staff',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
 const StaffIndexRoute = StaffIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -49,26 +55,28 @@ const StaffTimesheetRoute = StaffTimesheetRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/admin': typeof AdminRoute
+  '/admin': typeof AdminRouteWithChildren
   '/staff': typeof StaffRouteWithChildren
   '/staff/profile': typeof StaffProfileRoute
   '/staff/timesheet': typeof StaffTimesheetRoute
+  '/admin/': typeof AdminIndexRoute
   '/staff/': typeof StaffIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/admin': typeof AdminRoute
   '/staff/profile': typeof StaffProfileRoute
   '/staff/timesheet': typeof StaffTimesheetRoute
+  '/admin': typeof AdminIndexRoute
   '/staff': typeof StaffIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/admin': typeof AdminRoute
+  '/admin': typeof AdminRouteWithChildren
   '/staff': typeof StaffRouteWithChildren
   '/staff/profile': typeof StaffProfileRoute
   '/staff/timesheet': typeof StaffTimesheetRoute
+  '/admin/': typeof AdminIndexRoute
   '/staff/': typeof StaffIndexRoute
 }
 export interface FileRouteTypes {
@@ -79,9 +87,10 @@ export interface FileRouteTypes {
     | '/staff'
     | '/staff/profile'
     | '/staff/timesheet'
+    | '/admin/'
     | '/staff/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/admin' | '/staff/profile' | '/staff/timesheet' | '/staff'
+  to: '/' | '/staff/profile' | '/staff/timesheet' | '/admin' | '/staff'
   id:
     | '__root__'
     | '/'
@@ -89,12 +98,13 @@ export interface FileRouteTypes {
     | '/staff'
     | '/staff/profile'
     | '/staff/timesheet'
+    | '/admin/'
     | '/staff/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AdminRoute: typeof AdminRoute
+  AdminRoute: typeof AdminRouteWithChildren
   StaffRoute: typeof StaffRouteWithChildren
 }
 
@@ -121,6 +131,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StaffRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/staff/': {
       id: '/staff/'
       path: '/'
@@ -145,6 +162,16 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AdminRouteChildren {
+  AdminIndexRoute: typeof AdminIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminIndexRoute: AdminIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
 interface StaffRouteChildren {
   StaffProfileRoute: typeof StaffProfileRoute
   StaffTimesheetRoute: typeof StaffTimesheetRoute
@@ -161,7 +188,7 @@ const StaffRouteWithChildren = StaffRoute._addFileChildren(StaffRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AdminRoute: AdminRoute,
+  AdminRoute: AdminRouteWithChildren,
   StaffRoute: StaffRouteWithChildren,
 }
 export const routeTree = rootRouteImport
