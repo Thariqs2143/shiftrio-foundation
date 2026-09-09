@@ -133,6 +133,9 @@ export type Shift = {
   status: ShiftStatus;
   checkInPhoto: Photo | null;
   checkOutPhoto: Photo | null;
+  /** Additional check-in / check-out photos captured on device. */
+  checkInPhotos?: Photo[];
+  checkOutPhotos?: Photo[];
   checkInLocation: LocationVerification | null;
   notes: string;
 };
