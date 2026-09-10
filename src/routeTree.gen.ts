@@ -14,8 +14,14 @@ import { Route as AdminRouteImport } from './routes/admin'
 import { Route as StaffRouteImport } from './routes/staff'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as StaffIndexRouteImport } from './routes/staff.index'
+import { Route as StaffActiveRouteImport } from './routes/staff.active'
+import { Route as StaffAttendanceRouteImport } from './routes/staff.attendance'
+import { Route as StaffEndRouteImport } from './routes/staff.end'
+import { Route as StaffHistoryRouteImport } from './routes/staff.history'
 import { Route as StaffProfileRouteImport } from './routes/staff.profile'
 import { Route as StaffStartRouteImport } from './routes/staff.start'
+import { Route as StaffCompletedShiftIdRouteImport } from './routes/staff.completed.$shiftId'
+import { Route as StaffHistoryShiftIdRouteImport } from './routes/staff.history.$shiftId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -42,6 +48,26 @@ const StaffIndexRoute = StaffIndexRouteImport.update({
   path: '/',
   getParentRoute: () => StaffRoute,
 } as any)
+const StaffActiveRoute = StaffActiveRouteImport.update({
+  id: '/active',
+  path: '/active',
+  getParentRoute: () => StaffRoute,
+} as any)
+const StaffAttendanceRoute = StaffAttendanceRouteImport.update({
+  id: '/attendance',
+  path: '/attendance',
+  getParentRoute: () => StaffRoute,
+} as any)
+const StaffEndRoute = StaffEndRouteImport.update({
+  id: '/end',
+  path: '/end',
+  getParentRoute: () => StaffRoute,
+} as any)
+const StaffHistoryRoute = StaffHistoryRouteImport.update({
+  id: '/history',
+  path: '/history',
+  getParentRoute: () => StaffRoute,
+} as any)
 const StaffProfileRoute = StaffProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
@@ -52,32 +78,60 @@ const StaffStartRoute = StaffStartRouteImport.update({
   path: '/start',
   getParentRoute: () => StaffRoute,
 } as any)
+const StaffCompletedShiftIdRoute = StaffCompletedShiftIdRouteImport.update({
+  id: '/completed/$shiftId',
+  path: '/completed/$shiftId',
+  getParentRoute: () => StaffRoute,
+} as any)
+const StaffHistoryShiftIdRoute = StaffHistoryShiftIdRouteImport.update({
+  id: '/$shiftId',
+  path: '/$shiftId',
+  getParentRoute: () => StaffHistoryRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/staff': typeof StaffRouteWithChildren
+  '/staff/active': typeof StaffActiveRoute
+  '/staff/attendance': typeof StaffAttendanceRoute
+  '/staff/end': typeof StaffEndRoute
+  '/staff/history': typeof StaffHistoryRouteWithChildren
   '/staff/profile': typeof StaffProfileRoute
   '/staff/start': typeof StaffStartRoute
   '/admin/': typeof AdminIndexRoute
   '/staff/': typeof StaffIndexRoute
+  '/staff/completed/$shiftId': typeof StaffCompletedShiftIdRoute
+  '/staff/history/$shiftId': typeof StaffHistoryShiftIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/staff/active': typeof StaffActiveRoute
+  '/staff/attendance': typeof StaffAttendanceRoute
+  '/staff/end': typeof StaffEndRoute
+  '/staff/history': typeof StaffHistoryRouteWithChildren
   '/staff/profile': typeof StaffProfileRoute
   '/staff/start': typeof StaffStartRoute
   '/admin': typeof AdminIndexRoute
   '/staff': typeof StaffIndexRoute
+  '/staff/completed/$shiftId': typeof StaffCompletedShiftIdRoute
+  '/staff/history/$shiftId': typeof StaffHistoryShiftIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/staff': typeof StaffRouteWithChildren
+  '/staff/active': typeof StaffActiveRoute
+  '/staff/attendance': typeof StaffAttendanceRoute
+  '/staff/end': typeof StaffEndRoute
+  '/staff/history': typeof StaffHistoryRouteWithChildren
   '/staff/profile': typeof StaffProfileRoute
   '/staff/start': typeof StaffStartRoute
   '/admin/': typeof AdminIndexRoute
   '/staff/': typeof StaffIndexRoute
+  '/staff/completed/$shiftId': typeof StaffCompletedShiftIdRoute
+  '/staff/history/$shiftId': typeof StaffHistoryShiftIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -85,21 +139,44 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/staff'
+    | '/staff/active'
+    | '/staff/attendance'
+    | '/staff/end'
+    | '/staff/history'
     | '/staff/profile'
     | '/staff/start'
     | '/admin/'
     | '/staff/'
+    | '/staff/completed/$shiftId'
+    | '/staff/history/$shiftId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/staff/profile' | '/staff/start' | '/admin' | '/staff'
+  to:
+    | '/'
+    | '/staff/active'
+    | '/staff/attendance'
+    | '/staff/end'
+    | '/staff/history'
+    | '/staff/profile'
+    | '/staff/start'
+    | '/admin'
+    | '/staff'
+    | '/staff/completed/$shiftId'
+    | '/staff/history/$shiftId'
   id:
     | '__root__'
     | '/'
     | '/admin'
     | '/staff'
+    | '/staff/active'
+    | '/staff/attendance'
+    | '/staff/end'
+    | '/staff/history'
     | '/staff/profile'
     | '/staff/start'
     | '/admin/'
     | '/staff/'
+    | '/staff/completed/$shiftId'
+    | '/staff/history/$shiftId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -145,6 +222,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StaffIndexRouteImport
       parentRoute: typeof StaffRoute
     }
+    '/staff/active': {
+      id: '/staff/active'
+      path: '/active'
+      fullPath: '/staff/active'
+      preLoaderRoute: typeof StaffActiveRouteImport
+      parentRoute: typeof StaffRoute
+    }
+    '/staff/attendance': {
+      id: '/staff/attendance'
+      path: '/attendance'
+      fullPath: '/staff/attendance'
+      preLoaderRoute: typeof StaffAttendanceRouteImport
+      parentRoute: typeof StaffRoute
+    }
+    '/staff/end': {
+      id: '/staff/end'
+      path: '/end'
+      fullPath: '/staff/end'
+      preLoaderRoute: typeof StaffEndRouteImport
+      parentRoute: typeof StaffRoute
+    }
+    '/staff/history': {
+      id: '/staff/history'
+      path: '/history'
+      fullPath: '/staff/history'
+      preLoaderRoute: typeof StaffHistoryRouteImport
+      parentRoute: typeof StaffRoute
+    }
     '/staff/profile': {
       id: '/staff/profile'
       path: '/profile'
@@ -159,6 +264,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StaffStartRouteImport
       parentRoute: typeof StaffRoute
     }
+    '/staff/completed/$shiftId': {
+      id: '/staff/completed/$shiftId'
+      path: '/completed/$shiftId'
+      fullPath: '/staff/completed/$shiftId'
+      preLoaderRoute: typeof StaffCompletedShiftIdRouteImport
+      parentRoute: typeof StaffRoute
+    }
+    '/staff/history/$shiftId': {
+      id: '/staff/history/$shiftId'
+      path: '/$shiftId'
+      fullPath: '/staff/history/$shiftId'
+      preLoaderRoute: typeof StaffHistoryShiftIdRouteImport
+      parentRoute: typeof StaffHistoryRoute
+    }
   }
 }
 
@@ -172,16 +291,38 @@ const AdminRouteChildren: AdminRouteChildren = {
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
+interface StaffHistoryRouteChildren {
+  StaffHistoryShiftIdRoute: typeof StaffHistoryShiftIdRoute
+}
+
+const StaffHistoryRouteChildren: StaffHistoryRouteChildren = {
+  StaffHistoryShiftIdRoute: StaffHistoryShiftIdRoute,
+}
+
+const StaffHistoryRouteWithChildren = StaffHistoryRoute._addFileChildren(
+  StaffHistoryRouteChildren,
+)
+
 interface StaffRouteChildren {
+  StaffActiveRoute: typeof StaffActiveRoute
+  StaffAttendanceRoute: typeof StaffAttendanceRoute
+  StaffEndRoute: typeof StaffEndRoute
+  StaffHistoryRoute: typeof StaffHistoryRouteWithChildren
   StaffProfileRoute: typeof StaffProfileRoute
   StaffStartRoute: typeof StaffStartRoute
   StaffIndexRoute: typeof StaffIndexRoute
+  StaffCompletedShiftIdRoute: typeof StaffCompletedShiftIdRoute
 }
 
 const StaffRouteChildren: StaffRouteChildren = {
+  StaffActiveRoute: StaffActiveRoute,
+  StaffAttendanceRoute: StaffAttendanceRoute,
+  StaffEndRoute: StaffEndRoute,
+  StaffHistoryRoute: StaffHistoryRouteWithChildren,
   StaffProfileRoute: StaffProfileRoute,
   StaffStartRoute: StaffStartRoute,
   StaffIndexRoute: StaffIndexRoute,
+  StaffCompletedShiftIdRoute: StaffCompletedShiftIdRoute,
 }
 
 const StaffRouteWithChildren = StaffRoute._addFileChildren(StaffRouteChildren)
