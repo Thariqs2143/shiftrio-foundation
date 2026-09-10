@@ -5,6 +5,7 @@ import {
   MapPin,
   Play,
   ChevronRight,
+  ClipboardList,
   Timer,
   CalendarClock,
 } from "lucide-react";
@@ -175,7 +176,7 @@ function StaffHome() {
             <div className="grid grid-cols-2 gap-3">
               <Button asChild variant="outline" className="h-12 justify-start">
                 <Link to="/staff/history">
-                  <ClipboardIcon /> {t("history")}
+                  <ClipboardList className="size-4" /> {t("history")}
                 </Link>
               </Button>
               <Button asChild variant="outline" className="h-12 justify-start">
@@ -264,9 +265,3 @@ function StaffHome() {
     </div>
   );
 }
-
-function ClipboardIcon() {
-  return <ClipboardList className="size-4" />;
-}
-
-import { ClipboardList } from "lucide-react";

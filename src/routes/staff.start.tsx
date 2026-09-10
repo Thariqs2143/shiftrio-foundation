@@ -266,7 +266,8 @@ function StartShiftWizard() {
     });
     clearDraft();
     setSubmitting(false);
-    navigate({ to: "/staff/active", search: { started: created.id } as never });
+    void created;
+    navigate({ to: "/staff/active" });
   }
 
   return (
