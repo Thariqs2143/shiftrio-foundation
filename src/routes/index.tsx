@@ -1,12 +1,20 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { HardHat, ShieldCheck, MapPin, Camera, Clock, ArrowRight } from "lucide-react";
+import {
+  HardHat,
+  ShieldCheck,
+  MapPin,
+  Camera,
+  Clock,
+  ArrowRight,
+  Loader2,
+} from "lucide-react";
 import { ShiftrioLogo } from "@/components/shiftrio/brand";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { signIn, type Session } from "@/lib/session";
-import type { Role } from "@/lib/mock-data";
+import { signIn, signInWithCredentials, DEMO_PIN } from "@/lib/session";
+import type { Role } from "@/lib/models";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/")({
@@ -24,6 +32,8 @@ export const Route = createFileRoute("/")({
         content:
           "Mobile-first shift tracking, attendance and live site activity for industrial and construction teams.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: LoginPage,
@@ -34,33 +44,68 @@ const roles: {
   title: string;
   blurb: string;
   icon: typeof HardHat;
-  demo: string;
+  phone: string;
+  workerId?: string;
 }[] = [
   {
     role: "staff",
     title: "Staff",
     blurb: "Start your shift, log breaks, upload site photos.",
     icon: HardHat,
-    demo: "murugan@shiftrio.app",
+    phone: "98400 11223",
+    workerId: "VIW-1042",
   },
   {
     role: "admin",
     title: "Admin",
     blurb: "Live crews, sites, attendance and approvals.",
     icon: ShieldCheck,
-    demo: "anand@shiftrio.app",
+    phone: "98400 10101",
   },
 ];
 
 function LoginPage() {
   const navigate = useNavigate();
   const [role, setRole] = useState<Role>("staff");
+  const [phone, setPhone] = useState("");
+  const [workerId, setWorkerId] = useState("");
+  const [pin, setPin] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
+
   const active = roles.find((r) => r.role === role)!;
+
+  function go(target: Role) {
+    navigate({ to: target === "admin" ? "/admin" : "/staff" });
+  }
 
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
+    setError(null);
+    setBusy(true);
+    // Simulated network latency so the demo shows a real loading state.
+    window.setTimeout(() => {
+      const result = signInWithCredentials({ role, phone, workerId, pin });
+      setBusy(false);
+      if (!result.ok) {
+        setError(result.error);
+        return;
+      }
+      go(result.role);
+    }, 350);
+  }
+
+  function fillDemo() {
+    setError(null);
+    setPhone(active.phone);
+    setWorkerId(active.workerId ?? "");
+    setPin(DEMO_PIN);
+  }
+
+  function demoLogin() {
+    setError(null);
     signIn(role);
-    navigate({ to: role === "admin" ? "/admin" : "/staff" });
+    go(role);
   }
 
   return (
@@ -93,9 +138,7 @@ function LoginPage() {
               ))}
             </ul>
           </div>
-          <p className="text-xs text-muted-foreground">
-            English · தமிழ் support coming soon
-          </p>
+          <p className="text-xs text-muted-foreground">English · தமிழ் ready</p>
         </section>
 
         {/* Login panel */}
@@ -125,7 +168,10 @@ function LoginPage() {
                     type="button"
                     role="radio"
                     aria-checked={selected}
-                    onClick={() => setRole(r.role)}
+                    onClick={() => {
+                      setRole(r.role);
+                      setError(null);
+                    }}
                     className={cn(
                       "rounded-2xl border p-4 text-left transition-colors",
                       selected
@@ -150,35 +196,79 @@ function LoginPage() {
               })}
             </div>
 
-            <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+            <form onSubmit={handleSubmit} className="mt-6 space-y-4" noValidate>
               <div className="space-y-2">
-                <Label htmlFor="email">Work email or phone</Label>
+                <Label htmlFor="phone">Phone number</Label>
                 <Input
-                  id="email"
-                  type="text"
-                  defaultValue={active.demo}
-                  key={active.demo}
-                  autoComplete="username"
+                  id="phone"
+                  type="tel"
+                  inputMode="numeric"
+                  autoComplete="tel"
+                  placeholder="98400 11223"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
                 />
               </div>
+
+              {role === "staff" ? (
+                <div className="space-y-2">
+                  <Label htmlFor="workerId">Worker ID</Label>
+                  <Input
+                    id="workerId"
+                    type="text"
+                    placeholder="VIW-1042"
+                    value={workerId}
+                    onChange={(e) => setWorkerId(e.target.value)}
+                  />
+                </div>
+              ) : null}
+
               <div className="space-y-2">
-                <Label htmlFor="pin">PIN</Label>
+                <Label htmlFor="pin">4-digit PIN</Label>
                 <Input
                   id="pin"
                   type="password"
-                  defaultValue="1234"
                   inputMode="numeric"
+                  maxLength={4}
                   autoComplete="current-password"
+                  placeholder="••••"
+                  value={pin}
+                  onChange={(e) => setPin(e.target.value.replace(/\D/g, "").slice(0, 4))}
                 />
               </div>
-              <Button type="submit" size="lg" className="w-full font-display text-base uppercase tracking-wide">
-                Continue as {active.title}
-                <ArrowRight className="size-4" />
+
+              {error ? (
+                <p role="alert" className="text-sm font-medium text-destructive">
+                  {error}
+                </p>
+              ) : null}
+
+              <Button
+                type="submit"
+                size="lg"
+                disabled={busy}
+                className="w-full font-display text-base uppercase tracking-wide"
+              >
+                {busy ? (
+                  <Loader2 className="size-4 animate-spin" />
+                ) : (
+                  <ArrowRight className="size-4" />
+                )}
+                {busy ? "Signing in" : `Continue as ${active.title}`}
               </Button>
             </form>
 
+            <div className="mt-4 grid gap-2 sm:grid-cols-2">
+              <Button type="button" variant="outline" onClick={fillDemo}>
+                Fill demo details
+              </Button>
+              <Button type="button" variant="secondary" onClick={demoLogin}>
+                Demo login
+              </Button>
+            </div>
+
             <p className="mt-4 text-xs text-muted-foreground">
-              Demo sign-in — no real account needed. Credentials are pre-filled.
+              Demo build — sample data only. PIN for every demo account is {DEMO_PIN}.
             </p>
           </div>
         </section>
@@ -186,5 +276,3 @@ function LoginPage() {
     </div>
   );
 }
-
-export type { Session };

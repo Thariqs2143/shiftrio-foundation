@@ -1,9 +1,10 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import type { LucideIcon } from "lucide-react";
 import { LogOut, Languages } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ShiftrioLogo } from "./brand";
 import { signOut } from "@/lib/session";
+import { useLang } from "@/lib/i18n";
 
 export type NavItem = {
   to: string;
@@ -22,6 +23,14 @@ export function AppShell({
   userMeta: string;
   children: React.ReactNode;
 }) {
+  const navigate = useNavigate();
+  const { lang, setLang } = useLang();
+
+  function handleSignOut() {
+    signOut();
+    navigate({ to: "/", replace: true });
+  }
+
   return (
     <div className="min-h-screen bg-background">
       <div className="mx-auto flex w-full max-w-7xl">
@@ -48,13 +57,13 @@ export function AppShell({
           <div className="mt-auto rounded-2xl border border-border bg-surface p-3">
             <p className="truncate text-sm font-semibold">{userName}</p>
             <p className="truncate text-xs text-muted-foreground">{userMeta}</p>
-            <Link
-              to="/"
-              onClick={signOut}
+            <button
+              type="button"
+              onClick={handleSignOut}
               className="mt-3 inline-flex items-center gap-2 text-xs font-semibold text-muted-foreground transition-colors hover:text-foreground"
             >
               <LogOut className="size-3.5" /> Sign out
-            </Link>
+            </button>
           </div>
         </aside>
 
@@ -74,19 +83,20 @@ export function AppShell({
               <div className="flex shrink-0 items-center gap-2">
                 <button
                   type="button"
+                  onClick={() => setLang(lang === "en" ? "ta" : "en")}
                   className="inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-semibold text-muted-foreground transition-colors hover:text-foreground"
-                  aria-label="Language: English (Tamil coming soon)"
+                  aria-label={`Switch language, currently ${lang === "en" ? "English" : "Tamil"}`}
                 >
-                  <Languages className="size-3.5" /> EN
+                  <Languages className="size-3.5" /> {lang === "en" ? "EN" : "TA"}
                 </button>
-                <Link
-                  to="/"
-                  onClick={signOut}
+                <button
+                  type="button"
+                  onClick={handleSignOut}
                   className="grid size-9 place-items-center rounded-full border border-border text-muted-foreground transition-colors hover:text-foreground lg:hidden"
                   aria-label="Sign out"
                 >
                   <LogOut className="size-4" />
-                </Link>
+                </button>
               </div>
             </div>
           </header>
