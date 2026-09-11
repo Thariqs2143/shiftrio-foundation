@@ -790,15 +790,6 @@ export type Database = {
         Args: { _full_name: string; _org_name: string; _phone: string }
         Returns: string
       }
-      current_org_id: { Args: never; Returns: string }
-      has_role: {
-        Args: {
-          _role: Database["public"]["Enums"]["app_role"]
-          _user_id: string
-        }
-        Returns: boolean
-      }
-      is_manager: { Args: never; Returns: boolean }
       join_organization: {
         Args: {
           _employee_code: string
