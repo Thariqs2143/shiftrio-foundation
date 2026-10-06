@@ -112,7 +112,12 @@ function rowValue(row: RegistryRow, key: string) {
 }
 
 function emptyForm(entity: Entity): FormState {
-  const values: FormState = {};
+  const values: FormState = {
+    name: "", name_ta: "", employee_code: "", designation: "", phone: "", skills: "", status: "",
+    code: "", city: "", address: "", headcount_target: "", geofence_radius_m: "", lat: "", lng: "",
+    category: "", hours_run: "", last_serviced_at: "", license_no: "", certified_for: "", email: "",
+    site_id: "", shift_preference: "",
+  };
   for (const field of definitions[entity].fields) values[field.key] = "";
   if (entity === "workers") values.status = "active";
   if (entity === "sites") { values.status = "active"; values.headcount_target = "20"; values.geofence_radius_m = "150"; }
@@ -123,10 +128,12 @@ function emptyForm(entity: Entity): FormState {
 }
 
 function formFromRow(entity: Entity, row: RegistryRow): FormState {
-  return Object.fromEntries(definitions[entity].fields.map((field) => [field.key, rowValue(row, field.key)]));
+  return Object.fromEntries(definitions[entity].fields.map((field) => [field.key, rowValue(row, field.key)])) as FormState;
 }
 
-function numeric(value: string, nullable = false) {
+function numeric(value: string): number;
+function numeric(value: string, nullable: true): number | null;
+function numeric(value: string, nullable = false): number | null {
   if (!value.trim() && nullable) return null;
   if (!value.trim()) return 0;
   return Number(value);
