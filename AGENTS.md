@@ -8,3 +8,5 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+Admin record-management surfaces share an organization-scoped registry UI and use the authenticated Cloud client directly, so row-level policies remain the access boundary.

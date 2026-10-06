@@ -1,0 +1,2 @@
+- [ ] Add organization-scoped Admin CRUD for Workers, Sites, Machines, Operators, and In-charges.
+- [ ] Verify new Admin routes and current build; leave Operations/Reports and remaining backend wiring for the next agreed phase.

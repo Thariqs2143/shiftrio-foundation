@@ -1,5 +1,5 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
-import { LayoutDashboard, Users, MapPin, ClipboardCheck } from "lucide-react";
+import { LayoutDashboard, Users, MapPin, ClipboardCheck, Wrench } from "lucide-react";
 import { AppShell, type NavItem } from "@/components/shiftrio/app-shell";
 import { useSession } from "@/lib/session";
 
@@ -11,6 +11,7 @@ const navItems: NavItem[] = [
   { to: "/admin", label: "Overview", icon: LayoutDashboard },
   { to: "/admin/workers", label: "Workers", icon: Users },
   { to: "/admin/sites", label: "Sites", icon: MapPin },
+  { to: "/admin/machines", label: "Equipment", icon: Wrench },
   { to: "/admin/attendance", label: "Attendance", icon: ClipboardCheck },
 ];
 
