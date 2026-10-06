@@ -13,6 +13,11 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as StaffRouteImport } from './routes/staff'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as AdminInchargesRouteImport } from './routes/admin.incharges'
+import { Route as AdminMachinesRouteImport } from './routes/admin.machines'
+import { Route as AdminOperatorsRouteImport } from './routes/admin.operators'
+import { Route as AdminSitesRouteImport } from './routes/admin.sites'
+import { Route as AdminWorkersRouteImport } from './routes/admin.workers'
 import { Route as StaffIndexRouteImport } from './routes/staff.index'
 import { Route as StaffActiveRouteImport } from './routes/staff.active'
 import { Route as StaffAttendanceRouteImport } from './routes/staff.attendance'
@@ -41,6 +46,31 @@ const StaffRoute = StaffRouteImport.update({
 const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminInchargesRoute = AdminInchargesRouteImport.update({
+  id: '/incharges',
+  path: '/incharges',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminMachinesRoute = AdminMachinesRouteImport.update({
+  id: '/machines',
+  path: '/machines',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminOperatorsRoute = AdminOperatorsRouteImport.update({
+  id: '/operators',
+  path: '/operators',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminSitesRoute = AdminSitesRouteImport.update({
+  id: '/sites',
+  path: '/sites',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminWorkersRoute = AdminWorkersRouteImport.update({
+  id: '/workers',
+  path: '/workers',
   getParentRoute: () => AdminRoute,
 } as any)
 const StaffIndexRoute = StaffIndexRouteImport.update({
@@ -93,6 +123,11 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/staff': typeof StaffRouteWithChildren
+  '/admin/incharges': typeof AdminInchargesRoute
+  '/admin/machines': typeof AdminMachinesRoute
+  '/admin/operators': typeof AdminOperatorsRoute
+  '/admin/sites': typeof AdminSitesRoute
+  '/admin/workers': typeof AdminWorkersRoute
   '/staff/active': typeof StaffActiveRoute
   '/staff/attendance': typeof StaffAttendanceRoute
   '/staff/end': typeof StaffEndRoute
@@ -106,6 +141,11 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin/incharges': typeof AdminInchargesRoute
+  '/admin/machines': typeof AdminMachinesRoute
+  '/admin/operators': typeof AdminOperatorsRoute
+  '/admin/sites': typeof AdminSitesRoute
+  '/admin/workers': typeof AdminWorkersRoute
   '/staff/active': typeof StaffActiveRoute
   '/staff/attendance': typeof StaffAttendanceRoute
   '/staff/end': typeof StaffEndRoute
@@ -122,6 +162,11 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/staff': typeof StaffRouteWithChildren
+  '/admin/incharges': typeof AdminInchargesRoute
+  '/admin/machines': typeof AdminMachinesRoute
+  '/admin/operators': typeof AdminOperatorsRoute
+  '/admin/sites': typeof AdminSitesRoute
+  '/admin/workers': typeof AdminWorkersRoute
   '/staff/active': typeof StaffActiveRoute
   '/staff/attendance': typeof StaffAttendanceRoute
   '/staff/end': typeof StaffEndRoute
@@ -139,6 +184,11 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/staff'
+    | '/admin/incharges'
+    | '/admin/machines'
+    | '/admin/operators'
+    | '/admin/sites'
+    | '/admin/workers'
     | '/staff/active'
     | '/staff/attendance'
     | '/staff/end'
@@ -152,6 +202,11 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/admin/incharges'
+    | '/admin/machines'
+    | '/admin/operators'
+    | '/admin/sites'
+    | '/admin/workers'
     | '/staff/active'
     | '/staff/attendance'
     | '/staff/end'
@@ -167,6 +222,11 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/staff'
+    | '/admin/incharges'
+    | '/admin/machines'
+    | '/admin/operators'
+    | '/admin/sites'
+    | '/admin/workers'
     | '/staff/active'
     | '/staff/attendance'
     | '/staff/end'
@@ -213,6 +273,41 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/admin/'
       preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/incharges': {
+      id: '/admin/incharges'
+      path: '/incharges'
+      fullPath: '/admin/incharges'
+      preLoaderRoute: typeof AdminInchargesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/machines': {
+      id: '/admin/machines'
+      path: '/machines'
+      fullPath: '/admin/machines'
+      preLoaderRoute: typeof AdminMachinesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/operators': {
+      id: '/admin/operators'
+      path: '/operators'
+      fullPath: '/admin/operators'
+      preLoaderRoute: typeof AdminOperatorsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/sites': {
+      id: '/admin/sites'
+      path: '/sites'
+      fullPath: '/admin/sites'
+      preLoaderRoute: typeof AdminSitesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/workers': {
+      id: '/admin/workers'
+      path: '/workers'
+      fullPath: '/admin/workers'
+      preLoaderRoute: typeof AdminWorkersRouteImport
       parentRoute: typeof AdminRoute
     }
     '/staff/': {
@@ -282,10 +377,20 @@ declare module '@tanstack/react-router' {
 }
 
 interface AdminRouteChildren {
+  AdminInchargesRoute: typeof AdminInchargesRoute
+  AdminMachinesRoute: typeof AdminMachinesRoute
+  AdminOperatorsRoute: typeof AdminOperatorsRoute
+  AdminSitesRoute: typeof AdminSitesRoute
+  AdminWorkersRoute: typeof AdminWorkersRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminInchargesRoute: AdminInchargesRoute,
+  AdminMachinesRoute: AdminMachinesRoute,
+  AdminOperatorsRoute: AdminOperatorsRoute,
+  AdminSitesRoute: AdminSitesRoute,
+  AdminWorkersRoute: AdminWorkersRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
 
