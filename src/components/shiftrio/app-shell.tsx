@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { ShiftrioLogo } from "./brand";
 import { signOut } from "@/lib/session";
 import { useLang } from "@/lib/i18n";
+import { supabase } from "@/integrations/supabase/client";
 
 export type NavItem = {
   to: string;
@@ -28,8 +29,12 @@ export function AppShell({
 
   function handleSignOut() {
     signOut();
+    void supabase.auth.signOut();
     navigate({ to: "/", replace: true });
   }
+
+  const primaryNavItems = navItems.filter((item) => item.label !== "Profile");
+  const profileNavItem = navItems.find((item) => item.label === "Profile");
 
   return (
     <div className="min-h-screen bg-background">
@@ -38,7 +43,7 @@ export function AppShell({
         <aside className="sticky top-0 hidden h-screen w-64 shrink-0 flex-col gap-6 border-r border-border bg-sidebar px-4 py-6 lg:flex">
           <ShiftrioLogo tagline="Shift control" />
           <nav className="flex flex-col gap-1">
-            {navItems.map((item) => (
+            {primaryNavItems.map((item) => (
               <Link
                 key={item.to}
                 to={item.to}
@@ -54,7 +59,18 @@ export function AppShell({
               </Link>
             ))}
           </nav>
-          <div className="mt-auto rounded-2xl border border-border bg-surface p-3">
+          {profileNavItem ? (
+            <Link
+              to={profileNavItem.to}
+              activeOptions={{ exact: true }}
+              className="mt-auto flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+              activeProps={{ className: "bg-primary/15 text-primary hover:bg-primary/20 hover:text-primary" }}
+            >
+              <profileNavItem.icon className="size-4 shrink-0" />
+              <span className="truncate">{profileNavItem.label}</span>
+            </Link>
+          ) : null}
+          <div className="rounded-2xl border border-border bg-surface p-3">
             <p className="truncate text-sm font-semibold">{userName}</p>
             <p className="truncate text-xs text-muted-foreground">{userMeta}</p>
             <button
