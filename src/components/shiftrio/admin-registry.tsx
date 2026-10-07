@@ -99,7 +99,9 @@ const definitions: Record<Entity, { title: string; singular: string; subtitle: s
   },
 };
 
-const relatedScreens: { entity: Entity; title: string; to: "/admin/machines" | "/admin/operators" | "/admin/incharges" }[] = [
+const relatedScreens: { entity: Entity; title: string; to: "/admin/workers" | "/admin/sites" | "/admin/machines" | "/admin/operators" | "/admin/incharges" }[] = [
+  { entity: "workers", title: "Workers", to: "/admin/workers" },
+  { entity: "sites", title: "Sites", to: "/admin/sites" },
   { entity: "machines", title: "Machines", to: "/admin/machines" },
   { entity: "operators", title: "Operators", to: "/admin/operators" },
   { entity: "incharges", title: "In-charges", to: "/admin/incharges" },
@@ -355,15 +357,13 @@ export function AdminRegistry({ entity }: { entity: Entity }) {
         <Button onClick={openCreate} className="w-full shrink-0 sm:w-auto"><Plus className="size-4" /> Add {config.singular}</Button>
       </header>
 
-      {entity !== "workers" && entity !== "sites" ? (
-        <nav aria-label="Equipment and team records" className="flex gap-1 overflow-x-auto border-b border-border">
+      <nav aria-label="Team and equipment records" className="flex gap-1 overflow-x-auto border-b border-border">
           {relatedScreens.map((screen) => (
             <Button key={screen.entity} asChild variant={screen.entity === entity ? "secondary" : "ghost"} size="sm" className="shrink-0 rounded-b-none">
               <Link to={screen.to}>{screen.title}</Link>
             </Button>
           ))}
-        </nav>
-      ) : null}
+      </nav>
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
         <div className="rounded-lg border border-border bg-card p-4">
@@ -486,7 +486,7 @@ export function AdminRegistry({ entity }: { entity: Entity }) {
       <Dialog open={Boolean(viewRow)} onOpenChange={(open) => { if (!open) setViewRow(null); }}>
         <DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-w-lg">
           {viewRow ? <>
-            <DialogHeader><DialogTitle>{viewRow.name}</DialogTitle><DialogDescription>{config.singular[0]?.toUpperCase()}${config.singular.slice(1)} record · organization data</DialogDescription></DialogHeader>
+            <DialogHeader><DialogTitle>{viewRow.name}</DialogTitle><DialogDescription>{config.singular[0]?.toUpperCase()}{config.singular.slice(1)} record · organization data</DialogDescription></DialogHeader>
             <dl className="grid gap-0 divide-y divide-border rounded-lg border border-border px-4">
               {config.fields.map((field) => {
                 const value = field.key === "site_id" ? siteNames.get(rowValue(viewRow, field.key)) ?? "Not assigned" : rowValue(viewRow, field.key);
