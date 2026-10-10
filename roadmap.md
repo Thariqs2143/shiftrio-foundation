@@ -1,2 +1,5 @@
-- [ ] Add organization-scoped Admin CRUD for Workers, Sites, Machines, Operators, and In-charges.
-- [ ] Verify new Admin routes and current build; leave Operations/Reports and remaining backend wiring for the next agreed phase.
+- [ ] Complete missing Operations, Reports, Profile, Notifications and Activity pages.
+- [ ] Finish five-item navigation, master-data tabs, authentication screens and frontend states.
+- [ ] Remove demo credentials from login and finish dashboard presentation.
+- [ ] Verify routes, interactions, mobile/desktop layout and preview errors.
+- [ ] Backend phase: replace legacy Staff local services, secure photo uploads and validate production operations (outside this frontend scope).

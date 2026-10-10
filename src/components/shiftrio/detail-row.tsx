@@ -5,7 +5,7 @@ export function DetailRow({
 }: {
   label: string;
   value: React.ReactNode;
-  hint?: string;
+  hint?: string | undefined;
 }) {
   return (
     <div className="grid grid-cols-[7.5rem_minmax(0,1fr)] items-start gap-3 py-2.5">

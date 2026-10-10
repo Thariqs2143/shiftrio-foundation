@@ -158,7 +158,7 @@ function StartShiftWizard() {
       return;
     }
     const next = WIZARD_STEPS[Math.min(WIZARD_STEPS.length - 1, index + 1)];
-    goTo(next);
+    if (next) goTo(next);
   }
 
   function prevStep() {
@@ -166,7 +166,8 @@ function StartShiftWizard() {
       navigate({ to: "/staff" });
       return;
     }
-    goTo(WIZARD_STEPS[index - 1]);
+    const previous = WIZARD_STEPS[index - 1];
+    if (previous) goTo(previous);
   }
 
   function validate(current: WizardStep): string | null {

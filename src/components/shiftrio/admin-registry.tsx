@@ -14,9 +14,10 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 
 type Entity = "workers" | "sites" | "machines" | "operators" | "incharges";
-type Field = { key: string; label: string; type?: "text" | "email" | "tel" | "number" | "textarea" | "select" | "tags"; required?: boolean; options?: readonly { value: string; label: string }[]; min?: number; step?: string };
+type Field = { key: FormKey; label: string; type?: "text" | "email" | "tel" | "number" | "textarea" | "select" | "tags"; required?: boolean; options?: readonly { value: string; label: string }[]; min?: number; step?: string };
 type RegistryRow = Record<string, unknown> & { id: string; name: string; status?: string; site_id?: string | null };
-type FormState = Record<string, string>;
+type FormKey = "name" | "name_ta" | "employee_code" | "designation" | "phone" | "skills" | "status" | "code" | "city" | "address" | "headcount_target" | "geofence_radius_m" | "lat" | "lng" | "category" | "hours_run" | "last_serviced_at" | "license_no" | "certified_for" | "email" | "site_id" | "shift_preference";
+type FormState = Record<FormKey, string>;
 
 const siteStatuses = [
   { value: "active", label: "Active" },
@@ -130,7 +131,7 @@ function emptyForm(entity: Entity): FormState {
 }
 
 function formFromRow(entity: Entity, row: RegistryRow): FormState {
-  return Object.fromEntries(definitions[entity].fields.map((field) => [field.key, rowValue(row, field.key)])) as FormState;
+  return { ...emptyForm(entity), ...Object.fromEntries(definitions[entity].fields.map((field) => [field.key, rowValue(row, field.key)])) };
 }
 
 function numeric(value: string): number;
@@ -299,7 +300,7 @@ export function AdminRegistry({ entity }: { entity: Entity }) {
   const siteNames = useMemo(() => new Map(sites.map((site) => [site.id, `${site.name}${rowValue(site, "code") ? ` · ${rowValue(site, "code")}` : ""}`])), [sites]);
   const filtered = useMemo(() => records.filter((row) => {
     const matchesQuery = config.search.some((key) => rowValue(row, key).toLocaleLowerCase().includes(query.trim().toLocaleLowerCase()));
-    const matchesStatus = statusFilter === "all" || row.status === statusFilter || row.shift_preference === statusFilter;
+    const matchesStatus = statusFilter === "all" || row.status === statusFilter || row["shift_preference"] === statusFilter;
     const matchesSite = siteFilter === "all" || row.site_id === siteFilter;
     return matchesQuery && matchesStatus && matchesSite;
   }), [config.search, records, query, statusFilter, siteFilter]);
