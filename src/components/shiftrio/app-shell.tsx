@@ -1,149 +1,29 @@
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate, useRouter } from "@tanstack/react-router";
+import { useState } from "react";
 import type { LucideIcon } from "lucide-react";
-import { LogOut, Languages } from "lucide-react";
+import { Bell, Languages, LogOut, Menu } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ShiftrioLogo } from "./brand";
 import { signOut } from "@/lib/session";
 import { useLang } from "@/lib/i18n";
 import { supabase } from "@/integrations/supabase/client";
-
-export type NavItem = {
-  to: string;
-  label: string;
-  icon: LucideIcon;
-};
-
-export function AppShell({
-  navItems,
-  userName,
-  userMeta,
-  children,
-}: {
-  navItems: NavItem[];
-  userName: string;
-  userMeta: string;
-  children: React.ReactNode;
-}) {
-  const navigate = useNavigate();
-  const { lang, setLang } = useLang();
-
-  function handleSignOut() {
-    signOut();
-    void supabase.auth.signOut();
-    navigate({ to: "/", replace: true });
+import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
+import { toast } from "sonner";
+export type NavItem = { to: string; label: string; icon: LucideIcon };
+export function AppShell({ navItems, userName, userMeta, children }: { navItems: NavItem[]; userName: string; userMeta: string; children: React.ReactNode }) {
+  const navigate = useNavigate(); const router = useRouter(); const { lang, setLang } = useLang(); const [drawer, setDrawer] = useState(false); const [busy, setBusy] = useState(false);
+  const admin = navItems.some((item) => item.to === "/admin");
+  async function handleSignOut() {
+    setBusy(true);
+    try { await router.options.context.queryClient.cancelQueries(); router.options.context.queryClient.clear(); const result = await supabase.auth.signOut(); if (result.error) throw result.error; signOut(); navigate({ to: "/", replace: true }); }
+    catch { toast.error("Unable to sign out. Check your connection and try again."); } finally { setBusy(false); }
   }
-
-  const primaryNavItems = navItems.filter((item) => item.label !== "Profile");
-  const profileNavItem = navItems.find((item) => item.label === "Profile");
-
-  return (
-    <div className="min-h-screen bg-background">
-      <div className="mx-auto flex w-full max-w-7xl">
-        {/* Desktop side navigation */}
-        <aside className="sticky top-0 hidden h-screen w-64 shrink-0 flex-col gap-6 border-r border-border bg-sidebar px-4 py-6 lg:flex">
-          <ShiftrioLogo tagline="Shift control" />
-          <nav className="flex flex-col gap-1">
-            {primaryNavItems.map((item) => (
-              <Link
-                key={item.to}
-                to={item.to}
-                activeOptions={{ exact: item.to.split("/").length <= 2 }}
-                className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-                activeProps={{
-                  className:
-                    "bg-primary/15 text-primary hover:bg-primary/20 hover:text-primary",
-                }}
-              >
-                <item.icon className="size-4 shrink-0" />
-                <span className="truncate">{item.label}</span>
-              </Link>
-            ))}
-          </nav>
-          {profileNavItem ? (
-            <Link
-              to={profileNavItem.to}
-              activeOptions={{ exact: true }}
-              className="mt-auto flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-              activeProps={{ className: "bg-primary/15 text-primary hover:bg-primary/20 hover:text-primary" }}
-            >
-              <profileNavItem.icon className="size-4 shrink-0" />
-              <span className="truncate">{profileNavItem.label}</span>
-            </Link>
-          ) : null}
-          <div className="rounded-2xl border border-border bg-surface p-3">
-            <p className="truncate text-sm font-semibold">{userName}</p>
-            <p className="truncate text-xs text-muted-foreground">{userMeta}</p>
-            <button
-              type="button"
-              onClick={handleSignOut}
-              className="mt-3 inline-flex items-center gap-2 text-xs font-semibold text-muted-foreground transition-colors hover:text-foreground"
-            >
-              <LogOut className="size-3.5" /> Sign out
-            </button>
-          </div>
-        </aside>
-
-        <div className="min-w-0 flex-1">
-          {/* Mobile / shared top bar */}
-          <header className="sticky top-0 z-20 border-b border-border bg-background/85 backdrop-blur">
-            <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-4 py-3">
-              <div className="min-w-0 lg:hidden">
-                <ShiftrioLogo tagline={userMeta} />
-              </div>
-              <div className="hidden min-w-0 lg:block">
-                <p className="truncate font-display text-lg font-bold uppercase tracking-wide">
-                  {userName}
-                </p>
-                <p className="truncate text-xs text-muted-foreground">{userMeta}</p>
-              </div>
-              <div className="flex shrink-0 items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => setLang(lang === "en" ? "ta" : "en")}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-semibold text-muted-foreground transition-colors hover:text-foreground"
-                  aria-label={`Switch language, currently ${lang === "en" ? "English" : "Tamil"}`}
-                >
-                  <Languages className="size-3.5" /> {lang === "en" ? "EN" : "TA"}
-                </button>
-                <button
-                  type="button"
-                  onClick={handleSignOut}
-                  className="grid size-9 place-items-center rounded-full border border-border text-muted-foreground transition-colors hover:text-foreground lg:hidden"
-                  aria-label="Sign out"
-                >
-                  <LogOut className="size-4" />
-                </button>
-              </div>
-            </div>
-          </header>
-
-          <main className="px-4 pb-28 pt-4 lg:pb-10 lg:pt-6">{children}</main>
-        </div>
-      </div>
-
-      {/* Mobile bottom navigation */}
-      <nav className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-background/95 backdrop-blur lg:hidden">
-        <ul
-          className="grid"
-          style={{ gridTemplateColumns: `repeat(${navItems.length}, minmax(0,1fr))` }}
-        >
-          {navItems.map((item) => (
-            <li key={item.to} className="min-w-0">
-              <Link
-                to={item.to}
-                activeOptions={{ exact: item.to.split("/").length <= 2 }}
-                className={cn(
-                  "flex flex-col items-center gap-1 px-1 py-2.5 text-[0.65rem] font-semibold uppercase tracking-wide text-muted-foreground transition-colors",
-                )}
-                activeProps={{ className: "text-primary" }}
-              >
-                <item.icon className="size-5 shrink-0" />
-                <span className="w-full truncate text-center">{item.label}</span>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </nav>
-    </div>
-  );
+  const items = navItems.slice(0, 5);
+  const navigation = <nav aria-label="Main navigation" className="flex flex-1 flex-col gap-1">{items.map((item, index) => <Button asChild key={item.to} variant="ghost" className={cn("h-11 justify-start px-3 text-muted-foreground", index === items.length - 1 && "mt-auto")}><Link to={item.to} onClick={() => setDrawer(false)} activeOptions={{ exact: item.to === "/admin" || item.to === "/staff" }} activeProps={{ className: "bg-primary/10 text-primary" }}><item.icon className="size-4 shrink-0" /><span>{item.label}</span></Link></Button>)}</nav>;
+  return <div className="min-h-dvh bg-background"><a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:bg-primary focus:p-3 focus:text-primary-foreground">Skip to content</a><div className="mx-auto flex w-full max-w-[1600px]">
+    <aside className="sticky top-0 hidden h-dvh w-60 shrink-0 flex-col gap-8 border-r border-border bg-sidebar px-4 py-6 lg:flex"><ShiftrioLogo tagline="Shift control" />{navigation}<div className="border-t border-border pt-4"><p className="truncate text-sm font-semibold">{userName}</p><p className="mt-1 truncate text-xs text-muted-foreground">{userMeta}</p><Button variant="ghost" size="sm" className="mt-3 px-0 text-muted-foreground" disabled={busy} onClick={() => void handleSignOut()}><LogOut className="size-4" />Sign out</Button></div></aside>
+    <div className="min-w-0 flex-1"><header className="sticky top-0 z-20 border-b border-border bg-background/95 backdrop-blur"><div className="flex items-center justify-between gap-3 px-4 py-3 sm:px-6"><div className="flex min-w-0 items-center gap-3"><Button variant="ghost" size="icon" className="shrink-0 lg:hidden" aria-label="Open navigation" onClick={() => setDrawer(true)}><Menu className="size-5" /></Button><div className="min-w-0"><p className="truncate font-display text-lg font-bold uppercase">{userName}</p><p className="truncate text-xs text-muted-foreground">{userMeta}</p></div></div><div className="flex shrink-0 items-center gap-1"><Button asChild variant="ghost" size="icon"><Link to={admin ? "/admin/notifications" : "/staff/notifications"} aria-label="Notifications"><Bell className="size-4" /></Link></Button><Button variant="ghost" size="sm" onClick={() => setLang(lang === "en" ? "ta" : "en")} aria-label={`Switch language, currently ${lang === "en" ? "English" : "Tamil"}`}><Languages className="size-4" /><span>{lang === "en" ? "EN" : "TA"}</span></Button></div></div></header><main id="main-content" className="px-4 pb-28 pt-6 sm:px-6 lg:pb-10">{children}</main></div>
+  </div><nav aria-label="Bottom navigation" className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-background/95 pb-[env(safe-area-inset-bottom)] backdrop-blur lg:hidden"><ul className="mx-auto grid max-w-lg grid-cols-5">{items.map((item) => <li key={item.to} className="min-w-0"><Link to={item.to} activeOptions={{ exact: item.to === "/admin" || item.to === "/staff" }} className="flex h-16 flex-col items-center justify-center gap-1 px-1 text-muted-foreground" activeProps={{ className: "bg-primary/10 text-primary" }}><item.icon className="size-5 shrink-0" /><span className="w-full truncate text-center text-[10px] font-semibold">{item.label}</span></Link></li>)}</ul></nav>
+  <Sheet open={drawer} onOpenChange={setDrawer}><SheetContent side="left" className="flex w-72 flex-col gap-6"><SheetHeader><SheetTitle><ShiftrioLogo /></SheetTitle><SheetDescription>{userMeta}</SheetDescription></SheetHeader>{navigation}<Button variant="outline" disabled={busy} onClick={() => void handleSignOut()}><LogOut className="size-4" />Sign out</Button></SheetContent></Sheet></div>;
 }

@@ -1,6 +1,6 @@
 import { createFileRoute, Outlet, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
-import { CalendarCheck, ClipboardList, Home, User } from "lucide-react";
+import { CalendarCheck, ClipboardList, Home, User, Play } from "lucide-react";
 import { AppShell, type NavItem } from "@/components/shiftrio/app-shell";
 import { useLang } from "@/lib/i18n";
 import { useStaffIdentity, useStoredSession } from "@/lib/session";
@@ -27,6 +27,7 @@ function StaffLayout() {
   const navItems: NavItem[] = [
     { to: "/staff", label: t("home"), icon: Home },
     { to: "/staff/history", label: t("history"), icon: ClipboardList },
+    { to: "/staff/start", label: "Shift", icon: Play },
     { to: "/staff/attendance", label: t("attendance"), icon: CalendarCheck },
     { to: "/staff/profile", label: t("profile"), icon: User },
   ];
