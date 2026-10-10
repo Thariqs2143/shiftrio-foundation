@@ -131,7 +131,7 @@ function emptyForm(entity: Entity): FormState {
 }
 
 function formFromRow(entity: Entity, row: RegistryRow): FormState {
-  return Object.fromEntries(definitions[entity].fields.map((field) => [field.key, rowValue(row, field.key)])) as FormState;
+  return { ...emptyForm(entity), ...Object.fromEntries(definitions[entity].fields.map((field) => [field.key, rowValue(row, field.key)])) };
 }
 
 function numeric(value: string): number;
@@ -300,7 +300,7 @@ export function AdminRegistry({ entity }: { entity: Entity }) {
   const siteNames = useMemo(() => new Map(sites.map((site) => [site.id, `${site.name}${rowValue(site, "code") ? ` · ${rowValue(site, "code")}` : ""}`])), [sites]);
   const filtered = useMemo(() => records.filter((row) => {
     const matchesQuery = config.search.some((key) => rowValue(row, key).toLocaleLowerCase().includes(query.trim().toLocaleLowerCase()));
-    const matchesStatus = statusFilter === "all" || row.status === statusFilter || row.shift_preference === statusFilter;
+    const matchesStatus = statusFilter === "all" || row.status === statusFilter || row["shift_preference"] === statusFilter;
     const matchesSite = siteFilter === "all" || row.site_id === siteFilter;
     return matchesQuery && matchesStatus && matchesSite;
   }), [config.search, records, query, statusFilter, siteFilter]);

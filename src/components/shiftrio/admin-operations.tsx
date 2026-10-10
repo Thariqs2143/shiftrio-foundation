@@ -39,7 +39,7 @@ const dateToday = () => {
 
 function dayInZone(iso: string, timezone: string) {
   const values = Object.fromEntries(new Intl.DateTimeFormat("en-CA", { timeZone: timezone, year: "numeric", month: "2-digit", day: "2-digit" }).formatToParts(new Date(iso)).map((part) => [part.type, part.value]));
-  return `${values.year}-${values.month}-${values.day}`;
+  return `${values["year"]}-${values["month"]}-${values["day"]}`;
 }
 
 function durationMinutes(shift: Shift, now = Date.now()) {
@@ -71,6 +71,8 @@ function exportCsv(filename: string, rows: string[][]) {
 }
 
 export function AdminOperations() {
+  const [, tick] = useState(0);
+  useEffect(() => { const timer = window.setInterval(() => tick((n) => n + 1), 1000); return () => window.clearInterval(timer); }, []);
   const [access, setAccess] = useState<AdminAccess | null>(null);
   const [workspace, setWorkspace] = useState<Workspace>(emptyWorkspace);
   const [loading, setLoading] = useState(true);
