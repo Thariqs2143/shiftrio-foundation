@@ -75,11 +75,11 @@ export async function fetchOrgPlan(): Promise<OrgPlan | null> {
   if (!data) return null;
   const row = data as Record<string, unknown>;
   return {
-    orgId: String(row.id),
-    orgName: String(row.name ?? ""),
-    plan: String(row.plan ?? "trial"),
-    trialEndsAt: String(row.trial_ends_at ?? new Date().toISOString()),
-    subscriptionEndsAt: (row.subscription_ends_at as string | null) ?? null,
+    orgId: String(row["id"]),
+    orgName: String(row["name"] ?? ""),
+    plan: String(row["plan"] ?? "trial"),
+    trialEndsAt: String(row["trial_ends_at"] ?? new Date().toISOString()),
+    subscriptionEndsAt: (row["subscription_ends_at"] as string | null) ?? null,
   };
 }
 

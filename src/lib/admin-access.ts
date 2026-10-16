@@ -21,5 +21,5 @@ export async function getAdminAccess(): Promise<AdminAccess> {
   if (error) throw error;
   if (!membership) throw new Error("Your account does not have organization administrator access.");
 
-  return { userId: authData.user.id, orgId: membership.org_id, role: membership.role };
+  return { userId: authData.user.id, orgId: membership.org_id, role: membership.role as AdminAccess["role"] };
 }
