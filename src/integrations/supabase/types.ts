@@ -267,6 +267,7 @@ export type Database = {
       organizations: {
         Row: {
           auto_approve_attendance: boolean
+          billing_cycle: string | null
           contact_email: string
           contact_phone: string
           created_at: string
@@ -278,14 +279,18 @@ export type Database = {
           legal_name: string
           name: string
           overtime_after_hours: number
+          plan: string
           require_check_in_photo: boolean
           require_gps_verification: boolean
           standard_shift_hours: number
+          subscription_ends_at: string | null
           timezone: string
+          trial_ends_at: string
           updated_at: string
         }
         Insert: {
           auto_approve_attendance?: boolean
+          billing_cycle?: string | null
           contact_email?: string
           contact_phone?: string
           created_at?: string
@@ -297,14 +302,18 @@ export type Database = {
           legal_name?: string
           name: string
           overtime_after_hours?: number
+          plan?: string
           require_check_in_photo?: boolean
           require_gps_verification?: boolean
           standard_shift_hours?: number
+          subscription_ends_at?: string | null
           timezone?: string
+          trial_ends_at?: string
           updated_at?: string
         }
         Update: {
           auto_approve_attendance?: boolean
+          billing_cycle?: string | null
           contact_email?: string
           contact_phone?: string
           created_at?: string
@@ -316,13 +325,63 @@ export type Database = {
           legal_name?: string
           name?: string
           overtime_after_hours?: number
+          plan?: string
           require_check_in_photo?: boolean
           require_gps_verification?: boolean
           standard_shift_hours?: number
+          subscription_ends_at?: string | null
           timezone?: string
+          trial_ends_at?: string
           updated_at?: string
         }
         Relationships: []
+      }
+      plan_requests: {
+        Row: {
+          billing_cycle: string
+          contact_name: string
+          contact_phone: string
+          created_at: string
+          id: string
+          message: string
+          org_id: string
+          plan: string
+          requested_by: string
+          status: string
+        }
+        Insert: {
+          billing_cycle: string
+          contact_name: string
+          contact_phone: string
+          created_at?: string
+          id?: string
+          message?: string
+          org_id: string
+          plan: string
+          requested_by?: string
+          status?: string
+        }
+        Update: {
+          billing_cycle?: string
+          contact_name?: string
+          contact_phone?: string
+          created_at?: string
+          id?: string
+          message?: string
+          org_id?: string
+          plan?: string
+          requested_by?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "plan_requests_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {
