@@ -119,7 +119,7 @@ function PricingPage() {
 }
 
 function RequestDialog({ open, onOpenChange, orgId, planId, cycle }: {
-  open: boolean; onOpenChange: (o: boolean) => void; orgId?: string; planId: PlanId; cycle: BillingCycle;
+  open: boolean; onOpenChange: (o: boolean) => void; orgId: string | undefined; planId: PlanId; cycle: BillingCycle;
 }) {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -129,13 +129,13 @@ function RequestDialog({ open, onOpenChange, orgId, planId, cycle }: {
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
-    if (!orgId) return toast.error("Sign in with your company admin account to request an upgrade.");
-    if (name.trim().length < 2 || !/^[+\d\s-]{8,15}$/.test(phone.trim())) return toast.error("Enter your name and a valid phone number.");
+    if (!orgId) { toast.error("Sign in with your company admin account to request an upgrade."); return; }
+    if (name.trim().length < 2 || !/^[+\d\s-]{8,15}$/.test(phone.trim())) { toast.error("Enter your name and a valid phone number."); return; }
     setBusy(true);
     const { error } = await (supabase.from as unknown as (t: string) => { insert: (v: object) => Promise<{ error: Error | null }> })("plan_requests")
       .insert({ org_id: orgId, plan: planId, billing_cycle: cycle, contact_name: name.trim(), contact_phone: phone.trim(), message: message.trim().slice(0, 1000) });
     setBusy(false);
-    if (error) return toast.error(error.message.includes("row-level") ? "Only company admins or managers can request an upgrade." : error.message);
+    if (error) { toast.error(error.message.includes("row-level") ? "Only company admins or managers can request an upgrade." : error.message); return; }
     toast.success("Request sent. Our team will call you shortly.");
     onOpenChange(false);
   }
