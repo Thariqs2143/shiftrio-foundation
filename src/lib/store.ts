@@ -244,7 +244,7 @@ export const shiftService = {
   update: (shiftId: string, patch: Partial<Shift>) =>
     mutate((db) => {
       const idx = db.shifts.findIndex((x) => x.id === shiftId);
-      if (idx >= 0) db.shifts[idx] = { ...db.shifts[idx], ...patch };
+      if (idx >= 0) db.shifts[idx] = { ...db.shifts[idx], ...patch } as Shift;
     }),
 };
 

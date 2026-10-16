@@ -12,12 +12,15 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
+import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as StaffRouteImport } from './routes/staff'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as AdminActivityRouteImport } from './routes/admin.activity'
 import { Route as AdminInchargesRouteImport } from './routes/admin.incharges'
 import { Route as AdminMachinesRouteImport } from './routes/admin.machines'
+import { Route as AdminNotificationsRouteImport } from './routes/admin.notifications'
 import { Route as AdminOperationsRouteImport } from './routes/admin.operations'
 import { Route as AdminOperatorsRouteImport } from './routes/admin.operators'
 import { Route as AdminProfileRouteImport } from './routes/admin.profile'
@@ -29,6 +32,7 @@ import { Route as StaffActiveRouteImport } from './routes/staff.active'
 import { Route as StaffAttendanceRouteImport } from './routes/staff.attendance'
 import { Route as StaffEndRouteImport } from './routes/staff.end'
 import { Route as StaffHistoryRouteImport } from './routes/staff.history'
+import { Route as StaffNotificationsRouteImport } from './routes/staff.notifications'
 import { Route as StaffProfileRouteImport } from './routes/staff.profile'
 import { Route as StaffStartRouteImport } from './routes/staff.start'
 import { Route as StaffCompletedShiftIdRouteImport } from './routes/staff.completed.$shiftId'
@@ -47,6 +51,11 @@ const AdminRoute = AdminRouteImport.update({
 const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
   id: '/forgot-password',
   path: '/forgot-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PricingRoute = PricingRouteImport.update({
+  id: '/pricing',
+  path: '/pricing',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RegisterRoute = RegisterRouteImport.update({
@@ -69,6 +78,11 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminActivityRoute = AdminActivityRouteImport.update({
+  id: '/activity',
+  path: '/activity',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminInchargesRoute = AdminInchargesRouteImport.update({
   id: '/incharges',
   path: '/incharges',
@@ -77,6 +91,11 @@ const AdminInchargesRoute = AdminInchargesRouteImport.update({
 const AdminMachinesRoute = AdminMachinesRouteImport.update({
   id: '/machines',
   path: '/machines',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminNotificationsRoute = AdminNotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminOperationsRoute = AdminOperationsRouteImport.update({
@@ -134,6 +153,11 @@ const StaffHistoryRoute = StaffHistoryRouteImport.update({
   path: '/history',
   getParentRoute: () => StaffRoute,
 } as any)
+const StaffNotificationsRoute = StaffNotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
+  getParentRoute: () => StaffRoute,
+} as any)
 const StaffProfileRoute = StaffProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
@@ -159,11 +183,14 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/forgot-password': typeof ForgotPasswordRoute
+  '/pricing': typeof PricingRoute
   '/register': typeof RegisterRoute
   '/reset-password': typeof ResetPasswordRoute
   '/staff': typeof StaffRouteWithChildren
+  '/admin/activity': typeof AdminActivityRoute
   '/admin/incharges': typeof AdminInchargesRoute
   '/admin/machines': typeof AdminMachinesRoute
+  '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/operations': typeof AdminOperationsRoute
   '/admin/operators': typeof AdminOperatorsRoute
   '/admin/profile': typeof AdminProfileRoute
@@ -174,6 +201,7 @@ export interface FileRoutesByFullPath {
   '/staff/attendance': typeof StaffAttendanceRoute
   '/staff/end': typeof StaffEndRoute
   '/staff/history': typeof StaffHistoryRouteWithChildren
+  '/staff/notifications': typeof StaffNotificationsRoute
   '/staff/profile': typeof StaffProfileRoute
   '/staff/start': typeof StaffStartRoute
   '/admin/': typeof AdminIndexRoute
@@ -184,10 +212,13 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/forgot-password': typeof ForgotPasswordRoute
+  '/pricing': typeof PricingRoute
   '/register': typeof RegisterRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/admin/activity': typeof AdminActivityRoute
   '/admin/incharges': typeof AdminInchargesRoute
   '/admin/machines': typeof AdminMachinesRoute
+  '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/operations': typeof AdminOperationsRoute
   '/admin/operators': typeof AdminOperatorsRoute
   '/admin/profile': typeof AdminProfileRoute
@@ -198,6 +229,7 @@ export interface FileRoutesByTo {
   '/staff/attendance': typeof StaffAttendanceRoute
   '/staff/end': typeof StaffEndRoute
   '/staff/history': typeof StaffHistoryRouteWithChildren
+  '/staff/notifications': typeof StaffNotificationsRoute
   '/staff/profile': typeof StaffProfileRoute
   '/staff/start': typeof StaffStartRoute
   '/admin': typeof AdminIndexRoute
@@ -210,11 +242,14 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/forgot-password': typeof ForgotPasswordRoute
+  '/pricing': typeof PricingRoute
   '/register': typeof RegisterRoute
   '/reset-password': typeof ResetPasswordRoute
   '/staff': typeof StaffRouteWithChildren
+  '/admin/activity': typeof AdminActivityRoute
   '/admin/incharges': typeof AdminInchargesRoute
   '/admin/machines': typeof AdminMachinesRoute
+  '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/operations': typeof AdminOperationsRoute
   '/admin/operators': typeof AdminOperatorsRoute
   '/admin/profile': typeof AdminProfileRoute
@@ -225,6 +260,7 @@ export interface FileRoutesById {
   '/staff/attendance': typeof StaffAttendanceRoute
   '/staff/end': typeof StaffEndRoute
   '/staff/history': typeof StaffHistoryRouteWithChildren
+  '/staff/notifications': typeof StaffNotificationsRoute
   '/staff/profile': typeof StaffProfileRoute
   '/staff/start': typeof StaffStartRoute
   '/admin/': typeof AdminIndexRoute
@@ -238,11 +274,14 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/forgot-password'
+    | '/pricing'
     | '/register'
     | '/reset-password'
     | '/staff'
+    | '/admin/activity'
     | '/admin/incharges'
     | '/admin/machines'
+    | '/admin/notifications'
     | '/admin/operations'
     | '/admin/operators'
     | '/admin/profile'
@@ -253,6 +292,7 @@ export interface FileRouteTypes {
     | '/staff/attendance'
     | '/staff/end'
     | '/staff/history'
+    | '/staff/notifications'
     | '/staff/profile'
     | '/staff/start'
     | '/admin/'
@@ -263,10 +303,13 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/forgot-password'
+    | '/pricing'
     | '/register'
     | '/reset-password'
+    | '/admin/activity'
     | '/admin/incharges'
     | '/admin/machines'
+    | '/admin/notifications'
     | '/admin/operations'
     | '/admin/operators'
     | '/admin/profile'
@@ -277,6 +320,7 @@ export interface FileRouteTypes {
     | '/staff/attendance'
     | '/staff/end'
     | '/staff/history'
+    | '/staff/notifications'
     | '/staff/profile'
     | '/staff/start'
     | '/admin'
@@ -288,11 +332,14 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/forgot-password'
+    | '/pricing'
     | '/register'
     | '/reset-password'
     | '/staff'
+    | '/admin/activity'
     | '/admin/incharges'
     | '/admin/machines'
+    | '/admin/notifications'
     | '/admin/operations'
     | '/admin/operators'
     | '/admin/profile'
@@ -303,6 +350,7 @@ export interface FileRouteTypes {
     | '/staff/attendance'
     | '/staff/end'
     | '/staff/history'
+    | '/staff/notifications'
     | '/staff/profile'
     | '/staff/start'
     | '/admin/'
@@ -315,6 +363,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRouteWithChildren
   ForgotPasswordRoute: typeof ForgotPasswordRoute
+  PricingRoute: typeof PricingRoute
   RegisterRoute: typeof RegisterRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   StaffRoute: typeof StaffRouteWithChildren
@@ -341,6 +390,13 @@ declare module '@tanstack/react-router' {
       path: '/forgot-password'
       fullPath: '/forgot-password'
       preLoaderRoute: typeof ForgotPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pricing': {
+      id: '/pricing'
+      path: '/pricing'
+      fullPath: '/pricing'
+      preLoaderRoute: typeof PricingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/register': {
@@ -371,6 +427,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/activity': {
+      id: '/admin/activity'
+      path: '/activity'
+      fullPath: '/admin/activity'
+      preLoaderRoute: typeof AdminActivityRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/incharges': {
       id: '/admin/incharges'
       path: '/incharges'
@@ -383,6 +446,13 @@ declare module '@tanstack/react-router' {
       path: '/machines'
       fullPath: '/admin/machines'
       preLoaderRoute: typeof AdminMachinesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/notifications': {
+      id: '/admin/notifications'
+      path: '/notifications'
+      fullPath: '/admin/notifications'
+      preLoaderRoute: typeof AdminNotificationsRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/operations': {
@@ -462,6 +532,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StaffHistoryRouteImport
       parentRoute: typeof StaffRoute
     }
+    '/staff/notifications': {
+      id: '/staff/notifications'
+      path: '/notifications'
+      fullPath: '/staff/notifications'
+      preLoaderRoute: typeof StaffNotificationsRouteImport
+      parentRoute: typeof StaffRoute
+    }
     '/staff/profile': {
       id: '/staff/profile'
       path: '/profile'
@@ -494,8 +571,10 @@ declare module '@tanstack/react-router' {
 }
 
 interface AdminRouteChildren {
+  AdminActivityRoute: typeof AdminActivityRoute
   AdminInchargesRoute: typeof AdminInchargesRoute
   AdminMachinesRoute: typeof AdminMachinesRoute
+  AdminNotificationsRoute: typeof AdminNotificationsRoute
   AdminOperationsRoute: typeof AdminOperationsRoute
   AdminOperatorsRoute: typeof AdminOperatorsRoute
   AdminProfileRoute: typeof AdminProfileRoute
@@ -506,8 +585,10 @@ interface AdminRouteChildren {
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminActivityRoute: AdminActivityRoute,
   AdminInchargesRoute: AdminInchargesRoute,
   AdminMachinesRoute: AdminMachinesRoute,
+  AdminNotificationsRoute: AdminNotificationsRoute,
   AdminOperationsRoute: AdminOperationsRoute,
   AdminOperatorsRoute: AdminOperatorsRoute,
   AdminProfileRoute: AdminProfileRoute,
@@ -536,6 +617,7 @@ interface StaffRouteChildren {
   StaffAttendanceRoute: typeof StaffAttendanceRoute
   StaffEndRoute: typeof StaffEndRoute
   StaffHistoryRoute: typeof StaffHistoryRouteWithChildren
+  StaffNotificationsRoute: typeof StaffNotificationsRoute
   StaffProfileRoute: typeof StaffProfileRoute
   StaffStartRoute: typeof StaffStartRoute
   StaffIndexRoute: typeof StaffIndexRoute
@@ -547,6 +629,7 @@ const StaffRouteChildren: StaffRouteChildren = {
   StaffAttendanceRoute: StaffAttendanceRoute,
   StaffEndRoute: StaffEndRoute,
   StaffHistoryRoute: StaffHistoryRouteWithChildren,
+  StaffNotificationsRoute: StaffNotificationsRoute,
   StaffProfileRoute: StaffProfileRoute,
   StaffStartRoute: StaffStartRoute,
   StaffIndexRoute: StaffIndexRoute,
@@ -559,6 +642,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
   ForgotPasswordRoute: ForgotPasswordRoute,
+  PricingRoute: PricingRoute,
   RegisterRoute: RegisterRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   StaffRoute: StaffRouteWithChildren,

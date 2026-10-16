@@ -213,7 +213,7 @@ async function saveRow(entity: Entity, id: string | null, form: FormState, orgId
   async function save<T extends Entity>(target: T) {
     const table = target;
     if (id) {
-      const { error } = await supabase.from(table).update(payload as never).eq("id", id).eq("org_id", orgId);
+      const { error } = await supabase.from(table).update(payload as never).eq("id" as never, id as never).eq("org_id" as never, orgId as never);
       if (error) throw error;
     } else {
       const { error } = await supabase.from(table).insert(payload as never);

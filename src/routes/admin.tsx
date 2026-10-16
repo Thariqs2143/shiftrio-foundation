@@ -1,5 +1,6 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { Activity, BarChart3, LayoutDashboard, User, Users } from "lucide-react";
+import { TrialGate } from "@/components/shiftrio/trial-gate";
 import { AppShell, type NavItem } from "@/components/shiftrio/app-shell";
 import { useSession } from "@/lib/session";
 
@@ -23,7 +24,7 @@ function AdminLayout() {
       userName={session.name}
       userMeta={`Admin · ${session.siteCode}`}
     >
-      <Outlet />
+      <TrialGate><Outlet /></TrialGate>
     </AppShell>
   );
 }

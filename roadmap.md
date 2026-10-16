@@ -3,3 +3,7 @@
 - [ ] Remove demo credentials from login and finish dashboard presentation.
 - [ ] Verify routes, interactions, mobile/desktop layout and preview errors.
 - [ ] Backend phase: replace legacy Staff local services, secure photo uploads and validate production operations (outside this frontend scope).
+- [x] Fix broken Activity/Notifications pages.
+- [x] 7-day free trial for new organizations; pricing page shown after expiry.
+- [x] Pricing page: Business / Business Plus, monthly (higher) and yearly, INR + 18% GST, upgrade request.
+- [ ] Online payment checkout (needs a paid Lovable plan to enable built-in payments).

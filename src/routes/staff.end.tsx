@@ -58,6 +58,7 @@ function EndShift() {
   const breaks = breakMinutes === "" ? shift.breakMinutes : Number(breakMinutes);
 
   function submit() {
+    if (!shift) return;
     if (Number.isNaN(breaks) || breaks < 0 || breaks > 480) {
       setError("Break minutes must be between 0 and 480.");
       return;
