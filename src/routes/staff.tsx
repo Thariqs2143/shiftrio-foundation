@@ -1,6 +1,7 @@
 import { createFileRoute, Outlet, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { CalendarCheck, ClipboardList, Home, User, Play } from "lucide-react";
+import { TrialGate } from "@/components/shiftrio/trial-gate";
 import { AppShell, type NavItem } from "@/components/shiftrio/app-shell";
 import { useLang } from "@/lib/i18n";
 import { useStaffIdentity, useStoredSession } from "@/lib/session";
@@ -40,7 +41,7 @@ function StaffLayout() {
       userName={identity?.worker.name ?? "Shiftrio worker"}
       userMeta={`${identity?.worker.designation ?? "Crew"} · ${site?.code ?? "Unassigned"}`}
     >
-      <Outlet />
+      <TrialGate><Outlet /></TrialGate>
     </AppShell>
   );
 }
